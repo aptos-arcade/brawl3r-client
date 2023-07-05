@@ -1,0 +1,1 @@
+export type { OwnersByCollection } from "@/types/Queries/OwnersByCollection";
