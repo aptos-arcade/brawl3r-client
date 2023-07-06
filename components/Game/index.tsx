@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Card, useDisclosure, VStack} from '@chakra-ui/react';
+import {Card, Text, useDisclosure, VStack} from '@chakra-ui/react';
 
 import { Unity } from 'react-unity-webgl';
 
@@ -43,13 +43,21 @@ const Game: React.FC = () => {
                 >
                     {
                         !isLoaded && (
-                            <CircularProgress
-                                size='80px'
+                            <VStack
                                 position='absolute'
                                 left='50%'
                                 top='50%'
                                 transform='translate(-50%, -50%)'
-                            />
+                            >
+                                <CircularProgress
+                                    size='80px'
+                                />
+                                <Text
+                                    textAlign={'center'}
+                                >
+                                    Loading can take a few seconds...
+                                </Text>
+                            </VStack>
                         )
                     }
                     <Unity

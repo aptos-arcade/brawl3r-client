@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import Header from "@/components/Header";
 import Game from "@/components/Game";
 import BrawlerMenu from "@/components/BrawlerMenu";
+import WalletModal from "@/components/WalletModal";
 
 const HomePage: NextPage = () => {
   return (
@@ -15,6 +16,7 @@ const HomePage: NextPage = () => {
           <Game />
           <Divider />
           <BrawlerMenu />
+          <WalletModal />
       </Layout>
   )
 }

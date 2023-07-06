@@ -1,12 +1,13 @@
 import {useEffect, useCallback} from "react";
 
+import {useUnityContext} from "react-unity-webgl";
+
 import {useWallet} from "@aptos-labs/wallet-adapter-react";
 
-
 import useAptosTransaction from "@/hooks/useAptosTransaction";
-import {useUnityContext} from "react-unity-webgl";
-import {ReactUnityEventParameter} from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import useWalletModal from "@/hooks/useWalletModal";
 
+import {ReactUnityEventParameter} from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 
 const useGame = () => {
 
@@ -28,6 +29,8 @@ const useGame = () => {
         codeUrl: `/build/Web.wasm`
     });
 
+    const { onOpen } = useWalletModal();
+
     useEffect(() => {
         if(isLoaded) {
             sendMessage("WalletManager", "SetAccountAddress", account?.address?.toString() || "");
@@ -46,8 +49,6 @@ const useGame = () => {
         sendMessage("TransactionHandler", "SendTransactionResult", success ? 1 : 0);
     }, [sendMessage, submitTransaction]);
 
-
-
     useEffect(() => {
 
         const onTransactionRequest = (
@@ -60,7 +61,9 @@ const useGame = () => {
         }
 
         const onSetConnectModalOpen = (isOpen: ReactUnityEventParameter) => {
-            console.log("onSetConnectModalOpen", (isOpen as number) > 0);
+            if((isOpen as number) > 0) {
+                onOpen();
+            }
             return undefined;
         }
 
@@ -70,7 +73,7 @@ const useGame = () => {
             removeEventListener("OnTransactionRequest", onTransactionRequest);
             removeEventListener("SetConnectModalOpen", onSetConnectModalOpen);
         };
-    }, [addEventListener, removeEventListener, handleTransactionRequest]);
+    }, [addEventListener, removeEventListener, handleTransactionRequest, onOpen]);
 
     return {
         unityProvider,

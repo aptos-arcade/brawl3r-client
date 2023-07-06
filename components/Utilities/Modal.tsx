@@ -29,9 +29,15 @@ const Modal: React.FC<Props> = ({ isOpen, onClose, modalFooter, modalHeader, mod
         >
             <ModalOverlay />
             <ModalContent
-                bg='#1A202C'
+                bg='background.500'
             >
-                <ModalHeader>{modalHeader}</ModalHeader>
+                <ModalHeader
+                    color='white'
+                    textAlign={'center'}
+                    fontSize={'2xl'}
+                >
+                    {modalHeader}
+                </ModalHeader>
                 <ModalBody>
                     {modalBody}
                 </ModalBody>

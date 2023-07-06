@@ -9,34 +9,33 @@ import {
     IconButton,
     useClipboard,
     useToast,
-    Image,
-    Flex,
 } from '@chakra-ui/react'
 
 import { FaWallet } from 'react-icons/fa'
 
-import { useWallet, Wallet } from '@aptos-labs/wallet-adapter-react'
+import { useWallet } from '@aptos-labs/wallet-adapter-react'
+
+import Button from "@/components/Utilities/Button";
+
+import useWalletModal from "@/hooks/useWalletModal";
 
 import {ellipsize} from "@/services/utils";
 
 const ConnectWallet: React.FC = () => {
 
-    const { connected, account, disconnect, wallets, connect } = useWallet();
+    const { connected, account, disconnect } = useWallet();
 
     const { onCopy, setValue } = useClipboard("")
 
     const toast = useToast();
+
+    const { onOpen } = useWalletModal();
 
     useEffect(() => {
         if (account?.address) {
             setValue(account?.address?.toString())
         }
     }, [account, setValue])
-
-
-    const onConnect = async (wallet : Wallet) => {
-        connect(wallet.name);
-    }
 
     const copy = () => {
         onCopy();
@@ -48,7 +47,18 @@ const ConnectWallet: React.FC = () => {
         })
     }
 
-    const mobileView = useBreakpointValue({ base: true, sm: false })
+    const mobileView = useBreakpointValue({ base: true, sm: false });
+
+    if(!connected) {
+        return (
+            <Button
+                buttonType='primary'
+                onClick={onOpen}
+            >
+                Connect Wallet
+            </Button>
+        )
+    }
 
     return (
         <Menu
@@ -71,64 +81,32 @@ const ConnectWallet: React.FC = () => {
                 px={{ base: 2, md: 4 }}
             >
                 {
-                    account
-                        ? (account.ansName ? `${account.ansName}.apt` : ellipsize(account.address.toString()))
-                        : 'Connect Wallet'
+                    account && (account.ansName ? `${account.ansName}.apt` : ellipsize(account.address.toString()))
                 }
             </MenuButton>
             <MenuList
                 bg='background.500'
             >
-                {
-                    connected ? (
-                        <>
-                            <MenuItem
-                                onClick={copy}
-                                bg='transparent'
-                                color='white'
-                                _hover={{
-                                    bg: 'whiteAlpha.100',
-                                }}
-                            >
-                                Copy Address
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => disconnect()}
-                                bg='transparent'
-                                color='white'
-                                _hover={{
-                                    bg: 'whiteAlpha.100',
-                                }}
-                            >
-                                Disconnect
-                            </MenuItem>
-                        </>
-                    ) : (
-                        wallets.map(wallet => (
-                            <MenuItem
-                                key={wallet.name}
-                                onClick={() => onConnect(wallet)}
-                                icon={<Image src={wallet.icon} boxSize={6} alt={wallet.name} />}
-                                fontWeight="medium"
-                                alignItems='center'
-                                bg='transparent'
-                                color='white'
-                                _hover={{
-                                    bg: 'whiteAlpha.100',
-                                }}
-                            >
-                                <Flex
-                                    justifyContent='space-between'
-                                    alignItems='center'
-                                    gap={4}
-                                >
-                                    {wallet.name}
-                                </Flex>
-                            </MenuItem>
-                        ))
-                    )
-                }
-                
+                <MenuItem
+                    onClick={copy}
+                    bg='transparent'
+                    color='white'
+                    _hover={{
+                        bg: 'whiteAlpha.100',
+                    }}
+                >
+                    Copy Address
+                </MenuItem>
+                <MenuItem
+                    onClick={() => disconnect()}
+                    bg='transparent'
+                    color='white'
+                    _hover={{
+                        bg: 'whiteAlpha.100',
+                    }}
+                >
+                    Disconnect
+                </MenuItem>
             </MenuList>
         </Menu>
     )
