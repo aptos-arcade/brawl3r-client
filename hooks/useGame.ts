@@ -50,7 +50,6 @@ const useGame = () => {
     }, [sendMessage, submitTransaction]);
 
     useEffect(() => {
-
         const onTransactionRequest = (
             func: ReactUnityEventParameter,
             args: ReactUnityEventParameter,
