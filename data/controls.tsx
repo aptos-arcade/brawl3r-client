@@ -51,15 +51,15 @@ const controls: Controls[] = [
             ],
             [
                 {
-                    name: 'Left',
+                    name: 'Slash',
                     key: 'A'
                 },
                 {
-                    name: 'Down',
+                    name: 'Stun/Down',
                     key: 'S'
                 },
                 {
-                    name: 'Right',
+                    name: 'Slash',
                     key: 'D'
                 }
             ]
