@@ -91,7 +91,7 @@ const controls: Controls[] = [
                     key: <ArrowBackIcon />
                 },
                 {
-                    name: 'Drop',
+                    name: 'Drop/Fall',
                     key: <ArrowDownIcon />
                 },
                 {

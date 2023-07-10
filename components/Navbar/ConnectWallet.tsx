@@ -49,7 +49,7 @@ const ConnectWallet: React.FC = () => {
 
     const mobileView = useBreakpointValue({ base: true, sm: false });
 
-    if(!connected) {
+    if(!account?.address?.toString()) {
         return (
             <Button
                 buttonType='primary'
