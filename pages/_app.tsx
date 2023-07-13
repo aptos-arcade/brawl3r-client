@@ -47,6 +47,8 @@ export default function App({ Component, pageProps }: AppProps) {
               <title>BRAWL3R</title>
               <meta name="viewport" content="initial-scale=1.0, width=device-width" />
               <meta name="description" content="Fight as your Aptos NFTs in an arcade-style 2D platform brawler game." />
+              <meta property="og:title" content="BRAWL3R" />
+              <meta property="og:image" content="/cover.png" />
               <link rel="icon" type="image/png" href="/logo.png" />
             </Head>
             <Component {...pageProps} />
