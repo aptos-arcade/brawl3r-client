@@ -45,6 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <ChakraProvider theme={theme}>
             <Head>
               <title>BRAWL3R</title>
+              <meta charSet="utf-8"/>
               <meta name="viewport" content="initial-scale=1.0, width=device-width" />
               <meta name="description" content="Fight as your Aptos NFTs in an arcade-style 2D platform brawler game." />
               <meta property="og:title" content="BRAWL3R" />
