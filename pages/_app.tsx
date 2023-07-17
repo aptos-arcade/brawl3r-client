@@ -12,6 +12,7 @@ import { MartianWallet } from "@martianwallet/aptos-wallet-adapter";
 
 import type { AppProps } from 'next/app'
 import Head from "next/head";
+import { Analytics } from '@vercel/analytics/react';
 
 import {AptosProvider} from "@/contexts/AptosContext";
 
@@ -54,6 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <link rel="icon" type="image/png" href="/logo.png" />
             </Head>
             <Component {...pageProps} />
+            <Analytics />
           </ChakraProvider>
         </AptosProvider>
       </AptosWalletAdapterProvider>
