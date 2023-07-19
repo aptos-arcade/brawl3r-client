@@ -52,7 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <meta property="og:title" content="BRAWL3R" />
               <meta property="og:image" content="https://www.brawl3r.com/cover.png" />
               <meta name="twitter:title" content="BRAWL3R" />
-              <link rel="icon" href="/favicon.ico" />
+              <link rel="icon" type="image/png" href="/favicon.png" />
             </Head>
             <Component {...pageProps} />
             <Analytics />
