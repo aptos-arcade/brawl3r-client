@@ -19,7 +19,7 @@ export default async function handler(
                 query MyQuery($collection_id: String) {
                     current_collection_ownership_v2_view(
                         where: {collection_id: {_eq: $collection_id}}
-                        limit: 10
+                        limit: 50
                     ) {
                         owner_address
                     }
