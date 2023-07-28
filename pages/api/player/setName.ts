@@ -2,6 +2,7 @@ import {NextApiRequest, NextApiResponse} from "next";
 
 import {closeConnection, getConnection} from "@/db/connection";
 import {upsertPlayerName} from "@/db/inserts/playerInserts";
+import {runCorsMiddleware} from "@/services/apiUtils";
 
 interface Data {
     message: string
@@ -11,6 +12,9 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+
+    await runCorsMiddleware(req, res);
+
     if (req.method === 'OPTIONS') {
         return res.status(200).send({message: "OK"});
     }
