@@ -1,6 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {closeConnection, getConnection} from "@/db/connection";
 import {setMatchResult} from "@/db/inserts/casualInserts";
 
 interface Data {
@@ -26,10 +25,8 @@ export default async function handler(
             return;
         }
 
-        const [pool, connection] = await getConnection();
-        await pool.query(setMatchResult(body.matchId as string, body.winnerIndex as number))
+        await setMatchResult(body.matchId as string, body.winnerIndex as number)
             .catch((e) => res.status(400).json({message: e.message}));
-        await closeConnection(pool, connection);
         res.status(200).json({message: 'OK'});
     } else {
         res.status(400).json({message: 'Only POST requests allowed'})

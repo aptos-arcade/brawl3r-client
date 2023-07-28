@@ -1,27 +1,28 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
-import {topRankedPlayers} from "@/db/queries/rankedQueries";
-import {getConnection, closeConnection} from "@/db/connection";
+import {topRankedPlayers, topRankedPlayersByCollection} from "@/db/queries/rankedQueries";
 
-import {RankedPlayerRow, RankedPlayerRowQuery} from "@/types/Leaderboard/RankedPlayerRow";
-import {convertRankedPlayerRowResult} from "@/services/dbConverters/rankedConverters";
+import {RankedPlayerRow} from "@/types/Leaderboard/RankedPlayerRow";
 import {fetchANS} from "@/services/aptosUtils";
+import {convertRankedPlayerRowResult} from "@/services/dbConverters/rankedConverters";
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<RankedPlayerRow[]>
 ) {
-    const { numDays, limit, collectionIdHash } = req.query;
+    const numDays = req.query.numDays as string;
+    const limit = req.query.limit as string;
+    const collectionIdHash = req.query.collectionIdHash as string;
 
-    const [pool, connection] = await getConnection();
-
-    const { rows } = await pool.query<RankedPlayerRowQuery>(topRankedPlayers(
-        parseInt(numDays as string),
-        parseInt(limit as string),
-        collectionIdHash ? collectionIdHash as string : undefined
-    ));
-
-    await closeConnection(pool, connection);
+    const { rows } = collectionIdHash
+        ? await topRankedPlayersByCollection(
+            parseInt(numDays),
+            parseInt(limit),
+            collectionIdHash
+        ) : await topRankedPlayers(
+            parseInt(numDays),
+            parseInt(limit),
+        )
 
     await Promise.all(rows.map(async (row) => {
         const ans = await fetchANS(row.player_address);

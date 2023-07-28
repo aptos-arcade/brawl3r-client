@@ -1,9 +1,10 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {CasualMatchPlayer} from "@/types/Matches/CasualMatchPlayer";
-import {closeConnection, getConnection} from "@/db/connection";
-import {createMatch} from "@/db/inserts/casualInserts";
 import {Guid} from "guid-ts";
+
+import {createMatch} from "@/db/inserts/casualInserts";
+
+import {CasualMatchPlayer} from "@/types/Matches/CasualMatchPlayer";
 
 interface Data {
     message: string
@@ -41,11 +42,9 @@ export default async function handler(
             return;
         }
 
-        const [pool, connection] = await getConnection();
         let matchId = Guid.newGuid().toString();
-        await pool.query(createMatch(matchId, body.teams as CasualMatchPlayer[][]))
+        await createMatch(matchId, body.teams as CasualMatchPlayer[][])
             .catch((e) => res.status(400).json({message: e.message}));
-        await closeConnection(pool, connection);
         res.status(200).json({message: matchId});
     } else {
         res.status(400).json({message: 'Only POST requests allowed'})

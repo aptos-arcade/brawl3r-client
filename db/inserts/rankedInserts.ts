@@ -1,41 +1,42 @@
 import {RankedMatchPlayer} from "@/types/Matches/RankedMatchPlayer";
+import {db, VercelPoolClient} from "@vercel/postgres";
 
-const insertMatch = (matchObjectId: string) => `
+const insertMatch = async (client: VercelPoolClient, matchObjectId: string) => client.sql`
     insert into RankedMatches (match_object_id, status, date)
-    values('${matchObjectId}', 0, extract(epoch from now()));
+    values(${matchObjectId}, 0, extract(epoch from now()));
 `;
 
-const insertResults = (
+const insertResults = async (
+    client: VercelPoolClient,
     matchObjectId: string,
     playerAddress: string,
     collectionIdHash: string,
     teamIndex: number
-) => `
+) => client.sql`
     insert into RankedResults (match_object_id, player_address, collection_id_hash, outcome, team_index)
-    values('${matchObjectId}', '${playerAddress}', '${collectionIdHash}', 0, ${teamIndex});
+    values(${matchObjectId}, ${playerAddress}, ${collectionIdHash}, 0, ${teamIndex});
 `;
 
-export const createMatch = (matchObjectId: string, teams: RankedMatchPlayer[][]) => {
-    let query = insertMatch(matchObjectId);
-    teams.forEach((team, teamIndex) => {
-        team.forEach((player) => {
-            query += insertResults(
-                matchObjectId,
-                player.playerAddress,
-                player.collectionIdHash,
-                teamIndex
-            );
-        });
-    });
-    return query;
+export const createMatch = async(matchObjectId: string, teams: RankedMatchPlayer[][]) => {
+    const client = await db.connect();
+    await insertMatch(client, matchObjectId);
+    await Promise.all(teams.map(async (team, teamIndex) => {
+        await Promise.all(team.map(async (player) => {
+            await insertResults(client, matchObjectId, player.playerAddress, player.collectionIdHash, teamIndex);
+        }));
+    }));
 }
 
-export const setMatchResult = (matchObjectId: string, winnerIndex: number) => `
-    update RankedMatches
-    set status = 1
-    where match_object_id = '${matchObjectId}';
-
-    update RankedResults
-    set outcome = 1
-    where match_object_id = '${matchObjectId}' and team_index = ${winnerIndex};
-`;
+export const setMatchResult = async (matchObjectId: string, winnerIndex: number) => {
+    const client = await db.connect();
+    await client.sql`
+        update RankedMatches
+        set status = 1
+        where match_object_id = ${matchObjectId};
+    `;
+    await client.sql`
+        update RankedResults
+        set outcome = 1
+        where match_object_id = ${matchObjectId} and team_index = ${winnerIndex};
+    `;
+};

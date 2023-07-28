@@ -6,7 +6,6 @@ import {TransactionPayload_EntryFunctionPayload, UserTransaction} from "aptos/sr
 import {createMatch} from "@/services/transactionBuilder";
 import {getAptosProvider} from "@/services/aptosProvider";
 
-import { closeConnection, getConnection } from "@/db/connection";
 import { createMatch as createMatchDB } from "@/db/inserts/rankedInserts";
 
 import {aptosArenaModuleAddress} from "@/data/modules";
@@ -68,10 +67,8 @@ export default async function handler(
             return;
         }
 
-        const [pool, connection] = await getConnection();
-        await pool.query(createMatchDB(matchObjectId.substring(2), teams))
+        await createMatchDB(matchObjectId.substring(2), teams)
             .catch((e) => res.status(400).json({message: e.message}));
-        await closeConnection(pool, connection);
         res.status(200).json({message: matchObjectId});
     } else {
         res.status(400).json({message: 'Only POST requests allowed'})

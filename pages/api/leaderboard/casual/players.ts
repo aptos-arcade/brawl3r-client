@@ -1,27 +1,29 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
-import {getConnection, closeConnection} from "@/db/connection";
-import {topCasualPlayers} from "@/db/queries/casualQueries";
+import {topCasualPlayers, topCasualPlayersByCollection} from "@/db/queries/casualQueries";
 
+
+import {CasualPlayerRow} from "@/types/Leaderboard/CasualPlayerRow";
 import {convertCasualPlayerRowResult} from "@/services/dbConverters/casualConverters";
-
-import {CasualPlayerRow, CasualPlayerRowQuery} from "@/types/Leaderboard/CasualPlayerRow";
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<CasualPlayerRow[]>
 ) {
-    const { numDays, limit, collectionIdHash } = req.query;
 
-    const [pool, connection] = await getConnection();
+    const numDays = req.query.numDays as string;
+    const limit = req.query.limit as string;
+    const collectionIdHash = req.query.collectionIdHash as string;
 
-    const { rows } = await pool.query<CasualPlayerRowQuery>(topCasualPlayers(
-        parseInt(numDays as string),
-        parseInt(limit as string),
-        collectionIdHash ? collectionIdHash as string : undefined
-    ));
-
-    await closeConnection(pool, connection);
+    const { rows } = collectionIdHash
+        ? await topCasualPlayersByCollection(
+            parseInt(numDays),
+            parseInt(limit),
+            collectionIdHash
+        ) : await topCasualPlayers(
+            parseInt(numDays),
+            parseInt(limit),
+        )
 
     res.status(200).json(rows.map(convertCasualPlayerRowResult));
 }

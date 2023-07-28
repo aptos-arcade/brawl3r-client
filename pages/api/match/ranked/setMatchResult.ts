@@ -6,7 +6,6 @@ import {TransactionPayload_EntryFunctionPayload} from "aptos/src/generated";
 import {setMatchResult} from "@/services/transactionBuilder";
 import {getAptosProvider} from "@/services/aptosProvider";
 
-import {closeConnection, getConnection} from "@/db/connection";
 import {setMatchResult as setMatchResultDB} from "@/db/inserts/rankedInserts";
 
 import {aptosArenaModuleAddress} from "@/data/modules";
@@ -48,11 +47,8 @@ export default async function handler(
         await aptosClient.waitForTransactionWithResult(transactionRes.hash, { checkSuccess: true })
             .catch((e) => res.status(400).json({message: e.message}));
 
-        const [pool, connection] = await getConnection();
-        await pool.query(setMatchResultDB((body.matchAddress as string).substring(2), body.winnerIndex as number))
+        await setMatchResultDB((body.matchAddress as string).substring(2), body.winnerIndex as number)
             .catch((e) => res.status(400).json({message: e.message}));
-        await closeConnection(pool, connection);
-
         res.status(200).json({message: 'OK'})
 
     } else {

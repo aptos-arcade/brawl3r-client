@@ -1,25 +1,21 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
-import {getConnection, closeConnection} from "@/db/connection";
 import {topCasualCollections} from "@/db/queries/casualQueries";
 
+import {CasualCollectionRow} from "@/types/Leaderboard/CasualCollectionRow";
 import {convertCasualCollectionRowResult} from "@/services/dbConverters/casualConverters";
-import {CasualCollectionRow, CasualCollectionRowQuery} from "@/types/Leaderboard/CasualCollectionRow";
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<CasualCollectionRow[]>
 ) {
-    const { numDays, limit } = req.query;
+    const numDays = req.query.numDays as string;
+    const limit = req.query.limit as string;
 
-    const [pool, connection] = await getConnection();
-
-    const { rows } = await pool.query<CasualCollectionRowQuery>(topCasualCollections(
-        parseInt(numDays as string),
-        parseInt(limit as string),
-    ));
-
-    await closeConnection(pool, connection);
+    const { rows } = await topCasualCollections(
+        parseInt(numDays),
+        parseInt(limit),
+    );
 
     res.status(200).json(rows.map(convertCasualCollectionRowResult));
 }

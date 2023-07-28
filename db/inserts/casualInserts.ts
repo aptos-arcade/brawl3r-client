@@ -1,41 +1,42 @@
 import {CasualMatchPlayer} from "@/types/Matches/CasualMatchPlayer";
+import {db, VercelPoolClient} from "@vercel/postgres";
 
-const insertMatch = (matchId: string) => `
+const insertMatch = (client: VercelPoolClient, matchId: string) => client.sql`
     insert into CasualMatches (match_id, status, date)
-    values('${matchId}', 0, extract(epoch from now()));
+    values(${matchId}, 0, extract('epoch' from now()));
 `;
 
-const insertResult = (
+const insertResult = async (
+    client: VercelPoolClient,
     matchId: string,
     playerId: string,
     collectionIdHash: string,
     teamIndex: number
-) => `
+) => client.sql`
     insert into CasualResults (match_id, player_id, collection_id_hash, outcome, team_index)
-    values('${matchId}', '${playerId}', '${collectionIdHash}', 0, ${teamIndex});
+    values(${matchId}, ${playerId}, ${collectionIdHash}, 0, ${teamIndex});
 `;
 
-export const createMatch = (matchId: string, teams: CasualMatchPlayer[][]) => {
-    let query = insertMatch(matchId);
-    teams.forEach((team, teamIndex) => {
-        team.forEach((player) => {
-            query += insertResult(
-                matchId,
-                player.playerId,
-                player.collectionIdHash,
-                teamIndex
-            );
-        });
-    });
-    return query;
+export const createMatch = async (matchId: string, teams: CasualMatchPlayer[][]) => {
+    const client = await db.connect();
+    await insertMatch(client, matchId);
+    await Promise.all(teams.map(async (team, teamIndex) => {
+        await Promise.all(team.map(async (player) => {
+            await insertResult(client, matchId, player.playerId, player.collectionIdHash, teamIndex);
+        }));
+    }));
 }
 
-export const setMatchResult = (matchId: string, winnerIndex: number) => `
-    update CasualMatches
-    set status = 1
-    where match_id = '${matchId}';
-
-    update CasualResults
-    set outcome = 1
-    where match_id = '${matchId}' and team_index = ${winnerIndex};
-`;
+export const setMatchResult = async (matchId: string, winnerIndex: number) => {
+    const client = await db.connect();
+    await client. sql`
+        update CasualMatches
+        set status = 1
+        where match_id = ${matchId};
+    `;
+    await client.sql`
+        update CasualResults
+        set outcome = 1
+        where match_id = ${matchId} and team_index = ${winnerIndex};
+    `;
+}
