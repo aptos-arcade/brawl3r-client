@@ -32,7 +32,7 @@
     "framer-motion": "^10.12.18",
     "googleapis": "^122.0.0",
     "guid-ts": "^1.1.2",
-    "next": "13.4.8",
+    "next": "13.2.4",
     "petra-plugin-wallet-adapter": "^0.1.5",
     "pg": "^8.11.1",
     "react": "18.2.0",
