@@ -13,7 +13,9 @@ export default async function handler(
     res: NextApiResponse<Data>
 ) {
 
-    // await runCorsMiddleware(req, res);
+    if (req.method === 'OPTIONS') {
+        return res.status(200).send({message: "OK"});
+    }
 
     if (req.method === 'POST') {
         // get the request body json
