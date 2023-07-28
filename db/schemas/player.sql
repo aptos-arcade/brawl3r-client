@@ -4,3 +4,6 @@ create table Players (
 );
 
 drop table Players;
+
+-- select all players
+select * from Players;

@@ -22,7 +22,6 @@ const useStats = () => {
         if(account?.address?.toString() !== undefined) {
             setLoading(true);
             let playerEloRatingData = await getPlayerStats(provider.aptosClient, account?.address?.toString());
-            console.log(playerEloRatingData);
             setEloRating(playerEloRatingData.eloRating);
             setWins(playerEloRatingData.wins);
             setLosses(playerEloRatingData.losses);

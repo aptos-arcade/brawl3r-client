@@ -3,6 +3,7 @@ import {CasualCollectionRow, CasualCollectionRowQuery} from "@/types/Leaderboard
 
 export const convertCasualPlayerRowResult = (row: CasualPlayerRowQuery): CasualPlayerRow => ({
     playerId: row.player_id,
+    playerName: row.player_name,
     wins: parseInt(row.wins),
     losses: parseInt(row.losses),
 })

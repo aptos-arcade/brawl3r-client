@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 
+import {fetchANS as fetchANSService} from "../services/aptosUtils";
+
 const useANS = (address: string) => {
 
     const [name, setName] = useState<string>("");
 
     const fetchANS = useCallback(async () => {
-        const response = await fetch(`https://www.aptosnames.com/api/mainnet/v1/primary-name/${address}`);
-        const { name } = await response.json();
-        if(name) setName(`${name}.apt`);
+        const ans = await fetchANSService(address);
+        if(ans) setName(ans);
     }, [address])
 
     useEffect(() => {

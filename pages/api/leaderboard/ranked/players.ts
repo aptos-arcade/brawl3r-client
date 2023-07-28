@@ -5,6 +5,7 @@ import {getConnection, closeConnection} from "@/db/connection";
 
 import {RankedPlayerRow, RankedPlayerRowQuery} from "@/types/Leaderboard/RankedPlayerRow";
 import {convertRankedPlayerRowResult} from "@/services/dbConverters/rankedConverters";
+import {fetchANS} from "@/services/aptosUtils";
 
 export default async function handler(
     req: NextApiRequest,
@@ -21,6 +22,11 @@ export default async function handler(
     ));
 
     await closeConnection(pool, connection);
+
+    await Promise.all(rows.map(async (row) => {
+        const ans = await fetchANS(row.player_address);
+        if(ans) row.player_address = ans;
+    }));
 
     res.status(200).json(rows.map(convertRankedPlayerRowResult));
 }
