@@ -1,3 +1,7 @@
+import React from "react";
+
+import Head from "next/head";
+
 import { NextPage } from "next";
 
 import {Divider} from "@chakra-ui/react";
@@ -5,10 +9,7 @@ import {Divider} from "@chakra-ui/react";
 import Layout from "@/components/Layout";
 import Header from "@/components/Header";
 import Game from "@/components/Game";
-import BrawlerMenu from "@/components/BrawlerMenu";
 import WalletModal from "@/components/WalletModal";
-import Head from "next/head";
-import React from "react";
 
 const HomePage: NextPage = () => {
   return (
@@ -29,7 +30,7 @@ const HomePage: NextPage = () => {
               <Divider />
               <Game />
               <Divider />
-              <BrawlerMenu />
+              {/*<BrawlerMenu />*/}
               <WalletModal />
           </Layout>
       </>

@@ -4,7 +4,7 @@ import {CasualCollectionRowQuery} from "@/types/Leaderboard/CasualCollectionRow"
 import {CasualPlayerRowQuery} from "@/types/Leaderboard/CasualPlayerRow";
 
 export const topCasualPlayers = (numDays: number, limit: number) => sql<CasualPlayerRowQuery>`
-    select r.player_id, p.player_name, sum(outcome) as wins, count(outcome) - sum(outcome) as losses
+    select r.player_id, p.player_name, sum(outcome) as wins, count(outcome) - sum(outcome) as losses, sum(eliminations) as eliminations
     from CasualResults r
     join Players p on r.player_id = p.player_id
     join CasualMatches m on r.match_id = m.match_id
@@ -15,7 +15,7 @@ export const topCasualPlayers = (numDays: number, limit: number) => sql<CasualPl
 `;
 
 export const topCasualPlayersByCollection = (numDays: number, limit: number, collectionIdHash: string) => sql<CasualPlayerRowQuery>`
-    select r.player_id, p.player_name, sum(outcome) as wins, count(outcome) - sum(outcome) as losses
+    select r.player_id, p.player_name, sum(outcome) as wins, count(outcome) - sum(outcome) as losses, sum(eliminations) as eliminations
     from CasualResults r
     join Players p on r.player_id = p.player_id
     join CasualMatches m on r.match_id = m.match_id
@@ -26,7 +26,7 @@ export const topCasualPlayersByCollection = (numDays: number, limit: number, col
 `;
 
 export const topCasualCollections = (numDays: number, limit: number) => sql<CasualCollectionRowQuery>`
-    select collection_id_hash, sum(outcome) as wins, count(outcome) - sum(outcome) as losses
+    select collection_id_hash, sum(outcome) as wins, count(outcome) - sum(outcome) as losses, sum(eliminations) as eliminations
     from CasualResults r
     join CasualMatches m on r.match_id = m.match_id
     where m.status = 1 and date > extract(epoch from now()) - ${numDays * 24 * 60 * 60}

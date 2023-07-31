@@ -14,9 +14,13 @@ create table RankedResults (
     player_address char(64),
     collection_id_hash char(64),
     outcome int,
+    eliminations int,
     team_index int,
     primary key (match_object_id, player_address)
 );
+
+-- add the eliminations column to the RankedResults table with default value 0
+alter table RankedResults add column eliminations int default 0;
 
 -- drop the tables
 drop table RankedResults;

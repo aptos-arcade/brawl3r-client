@@ -1,23 +1,23 @@
 import {Achievement} from "@/types/Achievements";
 
-export const killsAchievement: Achievement = {
-    name: "Kills",
+export const eliminationsAchievement: Achievement = {
+    name: "Eliminations",
     tiers: [
         {
             name: "Bronze",
-            image: "/achievements/kills/bronze.png",
+            image: "/achievements/eliminations/bronze.png",
             threshold: 10,
             reward: "Iron Boots"
         },
         {
             name: "Silver",
-            image: "/achievements/kills/silver.png",
+            image: "/achievements/eliminations/silver.png",
             threshold: 15,
             reward: "Iron Helmet"
         },
         {
             name: "Gold",
-            image: "/achievements/kills/gold.png",
+            image: "/achievements/eliminations/gold.png",
             threshold: 30,
             reward: "Iron Chestplate"
         }

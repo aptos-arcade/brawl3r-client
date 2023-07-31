@@ -3,7 +3,7 @@ import {RankedCollectionRowQuery} from "@/types/Leaderboard/RankedCollectionRow"
 import {RankedPlayerRowQuery} from "@/types/Leaderboard/RankedPlayerRow";
 
 export const topRankedPlayers = (numDays: number, limit: number) => sql<RankedPlayerRowQuery>`
-    select player_address, sum(outcome) as wins, count(outcome) - sum(outcome) as losses
+    select player_address, sum(outcome) as wins, count(outcome) - sum(outcome) as losses, sum(eliminations) as eliminations
     from RankedResults r
     join RankedMatches m on r.match_object_id = m.match_object_id
     where m.status = 1 and date > extract(epoch from now()) - ${numDays * 24 * 60 * 60}
@@ -13,7 +13,7 @@ export const topRankedPlayers = (numDays: number, limit: number) => sql<RankedPl
 `;
 
 export const topRankedPlayersByCollection = (numDays: number, limit: number, collectionIdHash: string) => sql<RankedPlayerRowQuery>`
-    select player_address, sum(outcome) as wins, count(outcome) - sum(outcome) as losses
+    select player_address, sum(outcome) as wins, count(outcome) - sum(outcome) as losses, sum(eliminations) as eliminations
     from RankedResults r
     join RankedMatches m on r.match_object_id = m.match_object_id
     where m.status = 1 and date > extract(epoch from now()) - ${numDays * 24 * 60 * 60} and collection_id_hash = ${collectionIdHash}
@@ -23,7 +23,7 @@ export const topRankedPlayersByCollection = (numDays: number, limit: number, col
 `;
 
 export const topRankedCollections = (numDays: number, limit: number) => sql<RankedCollectionRowQuery>`
-    select collection_id_hash, sum(outcome) as wins, count(outcome) - sum(outcome) as losses
+    select collection_id_hash, sum(outcome) as wins, count(outcome) - sum(outcome) as losses, sum(eliminations) as eliminations
     from RankedResults r
     join RankedMatches m on r.match_object_id = m.match_object_id
     where m.status = 1 and date > extract(epoch from now()) - ${numDays * 24 * 60 * 60}

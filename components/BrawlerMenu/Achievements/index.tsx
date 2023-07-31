@@ -7,7 +7,7 @@ import CreateBrawlerButton from "@/components/BrawlerMenu/CreateBrawlerButton";
 
 import useStats from "@/hooks/useStats";
 
-import {eloAchievement, gamesAchievement, killsAchievement, winsAchievement} from "@/data/achievements";
+import {eloAchievement, gamesAchievement, eliminationsAchievement, winsAchievement} from "@/data/achievements";
 
 const Achievements = () => {
 
@@ -50,7 +50,7 @@ const Achievements = () => {
                             value={eloRating}
                         />
                         <Achievement
-                            achievement={killsAchievement}
+                            achievement={eliminationsAchievement}
                             value={0}
                         />
                     </VStack>

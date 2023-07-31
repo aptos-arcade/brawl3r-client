@@ -5,10 +5,12 @@ export const convertRankedPlayerRowResult = (row: RankedPlayerRowQuery): RankedP
     playerAddress: row.player_address,
     wins: parseInt(row.wins),
     losses: parseInt(row.losses),
+    eliminations: parseInt(row.eliminations),
 })
 
 export const convertRankedCollectionRowResult = (row: RankedCollectionRowQuery): RankedCollectionRow => ({
     collectionIdHash: row.collection_id_hash,
     wins: parseInt(row.wins),
     losses: parseInt(row.losses),
+    eliminations: parseInt(row.eliminations),
 })

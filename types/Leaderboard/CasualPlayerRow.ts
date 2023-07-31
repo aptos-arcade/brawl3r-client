@@ -3,6 +3,7 @@ export interface CasualPlayerRow {
     playerName: string
     wins: number;
     losses: number;
+    eliminations: number;
 }
 
 export interface CasualPlayerRowQuery {
@@ -10,4 +11,5 @@ export interface CasualPlayerRowQuery {
     player_name: string;
     wins: string;
     losses: string;
+    eliminations: string;
 }

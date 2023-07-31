@@ -6,10 +6,12 @@ export const convertCasualPlayerRowResult = (row: CasualPlayerRowQuery): CasualP
     playerName: row.player_name,
     wins: parseInt(row.wins),
     losses: parseInt(row.losses),
+    eliminations: parseInt(row.eliminations)
 })
 
 export const convertCasualCollectionRowResult = (row: CasualCollectionRowQuery): CasualCollectionRow => ({
     collectionIdHash: row.collection_id_hash,
     wins: parseInt(row.wins),
-    losses: parseInt(row.losses)
+    losses: parseInt(row.losses),
+    eliminations: parseInt(row.eliminations)
 });

@@ -10,8 +10,6 @@ import { createMatch as createMatchDB } from "@/db/inserts/rankedInserts";
 
 import {aptosArenaModuleAddress} from "@/data/modules";
 
-import {RankedMatchPlayer} from "@/types/Matches/RankedMatchPlayer";
-
 interface Data {
     message: string
 }
@@ -25,34 +23,30 @@ export default async function handler(
     }
     if (req.method === 'POST') {
         // get the request body json
-        const { body } = req;
-        if(body.teams === undefined) {
+        const teams = req.body.teams as string[][]
+        if(teams === undefined) {
             res.status(400).json({message: 'Teams is undefined'})
             return;
         }
-        if(body.teams.length < 2) {
+        if(teams.length < 2) {
             res.status(400).json({message: 'Must have at least two teams'})
             return;
         }
-        if(body.teams.some((team: RankedMatchPlayer[]) => team == undefined || team.length < 1)) {
+        if(teams.some((team: string[]) => team == undefined || team.length < 1)) {
             res.status(400).json({message: 'Teams must have at least one player'})
             return;
         }
-        if(body.teams.some((team: RankedMatchPlayer[]) => team.some((player: RankedMatchPlayer) => (
-            player.playerAddress === undefined || player.collectionIdHash == undefined
+        if(teams.some((team: string[]) => team.some((player: string) => (
+            player === undefined
         )))) {
             res.status(400).json({message: 'Teams is not formatted correctly'})
             return;
         }
 
-        const teams = body.teams as RankedMatchPlayer[][];
-
         let { aptosClient } = getAptosProvider(Network.MAINNET);
         const PK_BYTES = new HexString(process.env.ADMIN_PK as string).toUint8Array()
         const account = new AptosAccount(PK_BYTES);
-        let createMatchTransactionPayload = createMatch(
-            teams.map(team => team.map(player => player.playerAddress))
-        ) as TransactionPayload_EntryFunctionPayload;
+        let createMatchTransactionPayload = createMatch(teams) as TransactionPayload_EntryFunctionPayload;
         const txnRequest = await aptosClient.generateTransaction(
             aptosArenaModuleAddress,
             createMatchTransactionPayload
@@ -67,7 +61,7 @@ export default async function handler(
             return;
         }
 
-        await createMatchDB(matchObjectId.substring(2), teams)
+        await createMatchDB(matchObjectId.substring(2))
             .catch((e) => res.status(400).json({message: e.message}));
         res.status(200).json({message: matchObjectId});
     } else {

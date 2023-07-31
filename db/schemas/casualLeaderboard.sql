@@ -19,9 +19,16 @@ create table CasualResults (
     player_id varchar(64) references Players(player_id),
     collection_id_hash char(64),
     outcome int,
+    eliminations int,
     team_index int,
     primary key (match_id, player_id)
 );
+
+-- alter CasualResults to add eliminations column with default value 0
+alter table CasualResults add column eliminations int default 0;
+
+-- remove the eliminations column from CasualResults
+alter table CasualResults drop column eliminations;
 
 -- drop the tables
 drop table CasualResults;
@@ -34,7 +41,7 @@ select * from CasualMatches;
 select * from CasualResults;
 
 -- select the top 10 players by wins over the last 10 days, include player name
-select p.player_name, count(*) as wins
+select p.player_name, count(*) as wins, sum(r.eliminations) as eliminations
 from CasualResults r
 join Players p on p.player_id = r.player_id
 join CasualMatches m on m.match_id = r.match_id
