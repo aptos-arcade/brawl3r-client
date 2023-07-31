@@ -1,11 +1,11 @@
 import {RangedWeaponData} from "@/types/BrawlerData";
 
 const rangedWeaponNames = [
-    "Wooden Sword",
-    "Iron Sword",
-    "Fire Sword",
-    "Gold Sword",
-    "Diamond Sword",
+    "Wooden Gun",
+    "Iron Gun",
+    "Fire Gun",
+    "Gold Gun",
+    "Diamond Gun",
 ]
 
 export const getRangedWeaponName = (
