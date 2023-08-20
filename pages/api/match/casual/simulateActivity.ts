@@ -8,7 +8,7 @@ import {topCasualPlayers} from "@/services/leaderboard/casual";
 import {pick} from "@/services/utils";
 
 import supportedCollections from "@/data/supportedCollections";
-import {CasualMatchPlayer} from "@/types/Matches/CasualMatch";
+import {CasualMatchTeam} from "@/types/Matches/CasualMatch";
 
 interface Data {
     message: string
@@ -30,23 +30,31 @@ export default async function handler(
         for(let player of playerRows) {
             const matchId = Guid.newGuid().toString();
             await createMatch(matchId);
-            let teams: CasualMatchPlayer[][] = [];
+            let teams: CasualMatchTeam[] = [];
             const player1 = player.playerId;
-            teams.push([{
-                playerId: player1,
-                eliminations: Math.floor(Math.random() * 3),
-                collectionIdHash: pick(supportedCollections)
-            }]);
+            teams.push({
+                players: [
+                    {
+                        playerId: player1,
+                        eliminations: Math.floor(Math.random() * 3),
+                        collectionIdHash: pick(supportedCollections)
+                    }
+                ]
+            });
 
             let player2 = pick(playerRows).playerId;
             while(player2 === player1) {
                 player2 = pick(playerRows).playerId;
             }
-            teams.push([{
-                playerId: player2,
-                eliminations: Math.floor(Math.random() * 3),
-                collectionIdHash: pick(supportedCollections)
-            }]);
+            teams.push({
+                players: [
+                    {
+                        playerId: player2,
+                        eliminations: Math.floor(Math.random() * 3),
+                        collectionIdHash: pick(supportedCollections)
+                    }
+                ]
+            });
             await setMatchResult(matchId, Math.floor(Math.random() * 2), teams)
         }
 

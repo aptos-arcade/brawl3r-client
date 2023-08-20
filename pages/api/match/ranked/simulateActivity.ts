@@ -8,7 +8,7 @@ import {topRankedPlayers} from "@/services/leaderboard/ranked";
 import {pick} from "@/services/utils";
 
 import supportedCollections from "@/data/supportedCollections";
-import {RankedMatchPlayer} from "@/types/Matches/RankedMatch";
+import {RankedMatchTeam} from "@/types/Matches/RankedMatch";
 
 interface Data {
     message: string
@@ -30,23 +30,31 @@ export default async function handler(
         for(let player of playerRows) {
             const matchId = Guid.newGuid().toString();
             await createMatch(matchId);
-            let teams: RankedMatchPlayer[][] = [];
+            let teams: RankedMatchTeam[] = [];
             const player1 = player.playerAddress;
-            teams.push([{
-                playerAddress: player1,
-                eliminations: Math.floor(Math.random() * 3),
-                collectionIdHash: pick(supportedCollections)
-            }]);
+            teams.push({
+                players: [
+                    {
+                        playerAddress: player1,
+                        eliminations: Math.floor(Math.random() * 3),
+                        collectionIdHash: pick(supportedCollections)
+                    }
+                ]
+            });
 
             let player2 = pick(playerRows).playerAddress;
             while(player2 === player1) {
                 player2 = pick(playerRows).playerAddress;
             }
-            teams.push([{
-                playerAddress: player2,
-                eliminations: Math.floor(Math.random() * 3),
-                collectionIdHash: pick(supportedCollections)
-            }]);
+            teams.push({
+                players: [
+                    {
+                        playerAddress: player2,
+                        eliminations: Math.floor(Math.random() * 3),
+                        collectionIdHash: pick(supportedCollections)
+                    }
+                ]
+            });
             await setMatchResult(matchId, Math.floor(Math.random() * 2), teams)
         }
 
