@@ -15,10 +15,10 @@ export default async function handler(
     if(!accountAddress) res.status(200).send([]);
     const provider = getAptosProvider(Network.MAINNET);
     const collectionAddress = await getRangedWeaponCollectionAddress(provider.aptosClient);
-    const tokens = await provider.indexerClient.getTokenOwnedFromCollectionAddress(
+    const tokens = await provider.indexerClient?.getTokenOwnedFromCollectionAddress(
         accountAddress,
         collectionAddress
-    );
+    ) || {current_token_ownerships_v2: []}
     const rangedWeapons = await Promise.all(tokens.current_token_ownerships_v2.map((token) => (
         getRangedWeaponData(provider.aptosClient, token.storage_id)
     )));
