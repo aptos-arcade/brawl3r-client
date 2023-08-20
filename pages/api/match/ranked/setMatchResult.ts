@@ -9,7 +9,7 @@ import {getAptosProvider} from "@/services/aptosProvider";
 import {setMatchResult as setMatchResultDB} from "@/db/inserts/rankedInserts";
 
 import {aptosArenaModuleAddress} from "@/data/modules";
-import {RankedMatchPlayer} from "@/types/Matches/RankedMatchPlayer";
+import {RankedMatchPlayer, RankedMatchTeam} from "@/types/Matches/RankedMatch";
 
 interface Data {
     message: string
@@ -26,7 +26,7 @@ export default async function handler(
         // get the request body json
         const matchAddress = req.body.matchAddress as string;
         const winnerIndex = req.body.winnerIndex as number;
-        const teams = req.body.teams as RankedMatchPlayer[][];
+        const teams = req.body.teams as RankedMatchTeam[];
 
         if(matchAddress === undefined) {
             res.status(400).json({message: 'Match matchAddress is not a string'})
@@ -48,11 +48,11 @@ export default async function handler(
             res.status(400).json({message: 'Must have at least two teams'})
             return;
         }
-        if(teams.some((team: RankedMatchPlayer[]) => team == undefined || team.length < 1)) {
+        if(teams.some((team: RankedMatchTeam) => team == undefined || team.players.length < 1)) {
             res.status(400).json({message: 'Teams must have at least one player'})
             return;
         }
-        if(teams.some((team: RankedMatchPlayer[]) => team.some((player: RankedMatchPlayer) => (
+        if(teams.some((team: RankedMatchTeam) => team.players.some((player: RankedMatchPlayer) => (
             player.playerAddress === undefined || player.collectionIdHash == undefined || player.eliminations === undefined
         )))) {
             res.status(400).json({message: 'Teams is not formatted correctly'})

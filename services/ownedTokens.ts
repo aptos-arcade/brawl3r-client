@@ -14,7 +14,7 @@ export const getOwnedTokens = async (
         .current_token_ownerships_v2
         .filter((token) => {
             let collection_id = token.current_token_data?.current_collection?.collection_id;
-            return collection_id && collection_ids.includes(collection_id);
+            return collection_id && collection_ids.includes(collection_id.slice(2));
         })
         .map((token) => ({
             tokenDataId: {

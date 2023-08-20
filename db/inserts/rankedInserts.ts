@@ -1,4 +1,4 @@
-import {RankedMatchPlayer} from "@/types/Matches/RankedMatchPlayer";
+import {RankedMatchTeam} from "@/types/Matches/RankedMatch";
 import {db, VercelPoolClient} from "@vercel/postgres";
 
 const insertMatch = async (client: VercelPoolClient, matchObjectId: string) => client.sql`
@@ -24,7 +24,7 @@ export const createMatch = async(matchObjectId: string) => {
     await insertMatch(client, matchObjectId);
 }
 
-export const setMatchResult = async (matchObjectId: string, winnerIndex: number, teams: RankedMatchPlayer[][]) => {
+export const setMatchResult = async (matchObjectId: string, winnerIndex: number, teams: RankedMatchTeam[]) => {
     const client = await db.connect();
     await client.sql`
         update RankedMatches
@@ -32,7 +32,7 @@ export const setMatchResult = async (matchObjectId: string, winnerIndex: number,
         where match_object_id = ${matchObjectId};
     `;
     await Promise.all(teams.map(async (team, teamIndex) => {
-        await Promise.all(team.map(async (player) => {
+        await Promise.all(team.players.map(async (player) => {
             await insertResults(
                 client,
                 matchObjectId,

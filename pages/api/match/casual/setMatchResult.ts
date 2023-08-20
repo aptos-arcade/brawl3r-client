@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
 import {setMatchResult} from "@/db/inserts/casualInserts";
-import {CasualMatchPlayer} from "@/types/Matches/CasualMatchPlayer";
+import {CasualMatchPlayer, CasualMatchTeam} from "@/types/Matches/CasualMatch";
 
 interface Data {
     message: string
@@ -18,7 +18,7 @@ export default async function handler(
         // get the request body json
         const matchId = req.body.matchId as string;
         const winnerIndex = req.body.winnerIndex as number;
-        const teams = req.body.teams as CasualMatchPlayer[][];
+        const teams = req.body.teams as CasualMatchTeam[];
 
         if(matchId === undefined) {
             res.status(400).json({message: 'Match ID is undefined'})
@@ -40,11 +40,11 @@ export default async function handler(
             res.status(400).json({message: 'Must have at least two teams'})
             return;
         }
-        if(teams.some((team: CasualMatchPlayer[]) => team == undefined || team.length < 1)) {
+        if(teams.some((team: CasualMatchTeam) => team == undefined || team.players.length < 1)) {
             res.status(400).json({message: 'Teams must have at least one player'})
             return;
         }
-        if(teams.some((team: CasualMatchPlayer[]) => team.some((player: CasualMatchPlayer) => (
+        if(teams.some((team: CasualMatchTeam) => team.players.some((player: CasualMatchPlayer) => (
             player.playerId === undefined || player.collectionIdHash == undefined || player.eliminations === undefined
         )))) {
             res.status(400).json({message: 'Teams is not formatted correctly'})

@@ -4,16 +4,19 @@ import { Network } from "aptos";
 
 import { getPlayerBrawlerTokenAddress } from "@/services/viewFunctions";
 import {getAptosClient} from "@/services/aptosProvider";
+import {BrawlerAddress} from "@/types/BrawlerData/BrawlerAddress";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<string>
+    res: NextApiResponse<BrawlerAddress>
 ) {
-    const tokenAddress = await getPlayerBrawlerTokenAddress(
+    const address = await getPlayerBrawlerTokenAddress(
         getAptosClient(Network.MAINNET),
         req.query.accountAddress as string
     );
-    res.status(200).json(tokenAddress)
+    res.status(200).json({
+        address
+    })
 }
 
 

@@ -1,5 +1,5 @@
-import {CasualMatchPlayer} from "@/types/Matches/CasualMatchPlayer";
-import {db, VercelPoolClient} from "@vercel/postgres";
+import { CasualMatchTeam } from "@/types/Matches/CasualMatch";
+import { db, VercelPoolClient } from "@vercel/postgres";
 
 const insertMatch = (client: VercelPoolClient, matchId: string) => client.sql`
     insert into CasualMatches (match_id, status, date)
@@ -20,11 +20,18 @@ const insertResult = async (
 `;
 
 export const createMatch = async (matchId: string) => {
+    console.log(`Creating match ${matchId}`);
     const client = await db.connect();
-    await insertMatch(client, matchId);
+    await insertMatch(client, matchId)
+        .then(() => {
+            console.log(`Created match ${matchId}`);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
 }
 
-export const setMatchResult = async (matchId: string, winnerIndex: number, teams: CasualMatchPlayer[][]) => {
+export const setMatchResult = async (matchId: string, winnerIndex: number, teams: CasualMatchTeam[]) => {
     const client = await db.connect();
     await client. sql`
         update CasualMatches
@@ -32,7 +39,7 @@ export const setMatchResult = async (matchId: string, winnerIndex: number, teams
         where match_id = ${matchId};
     `;
     await Promise.all(teams.map(async (team, teamIndex) => {
-        await Promise.all(team.map(async (player) => {
+        await Promise.all(team.players.map(async (player) => {
             await insertResult(
                 client,
                 matchId,

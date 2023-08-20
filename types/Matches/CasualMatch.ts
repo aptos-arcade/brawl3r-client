@@ -3,3 +3,7 @@ export interface CasualMatchPlayer {
     collectionIdHash: string,
     eliminations: number
 }
+
+export interface CasualMatchTeam {
+    players: CasualMatchPlayer[]
+}

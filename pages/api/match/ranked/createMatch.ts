@@ -9,6 +9,7 @@ import {getAptosProvider} from "@/services/aptosProvider";
 import { createMatch as createMatchDB } from "@/db/inserts/rankedInserts";
 
 import {aptosArenaModuleAddress} from "@/data/modules";
+import {CreateRankedMatchTeam} from "@/types/Matches/RankedMatch";
 
 interface Data {
     message: string
@@ -23,7 +24,7 @@ export default async function handler(
     }
     if (req.method === 'POST') {
         // get the request body json
-        const teams = req.body.teams as string[][]
+        const teams = req.body.teams as CreateRankedMatchTeam[]
         if(teams === undefined) {
             res.status(400).json({message: 'Teams is undefined'})
             return;
@@ -32,11 +33,11 @@ export default async function handler(
             res.status(400).json({message: 'Must have at least two teams'})
             return;
         }
-        if(teams.some((team: string[]) => team == undefined || team.length < 1)) {
+        if(teams.some((team) => team == undefined || team.players.length < 1)) {
             res.status(400).json({message: 'Teams must have at least one player'})
             return;
         }
-        if(teams.some((team: string[]) => team.some((player: string) => (
+        if(teams.some((team) => team.players.some((player: string) => (
             player === undefined
         )))) {
             res.status(400).json({message: 'Teams is not formatted correctly'})
@@ -46,7 +47,7 @@ export default async function handler(
         let { aptosClient } = getAptosProvider(Network.MAINNET);
         const PK_BYTES = new HexString(process.env.ADMIN_PK as string).toUint8Array()
         const account = new AptosAccount(PK_BYTES);
-        let createMatchTransactionPayload = createMatch(teams) as TransactionPayload_EntryFunctionPayload;
+        let createMatchTransactionPayload = createMatch(teams.map(team => team.players)) as TransactionPayload_EntryFunctionPayload;
         const txnRequest = await aptosClient.generateTransaction(
             aptosArenaModuleAddress,
             createMatchTransactionPayload
