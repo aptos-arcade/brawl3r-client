@@ -1,6 +1,6 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
-import {Network} from "aptos";
+import {IndexerClient, Network} from "aptos";
 
 import {getAptosProvider} from "@/services/aptosProvider";
 import {getAptosArenaOwnedTokens} from "@/services/ownedTokens";
@@ -18,7 +18,7 @@ export default async function handler(
     const accountAddress = req.query.accountAddress as string;
     if(!accountAddress) res.status(200).send({tokens: []});
     const provider = getAptosProvider(Network.MAINNET);
-    const tokens = await getAptosArenaOwnedTokens(provider.indexerClient, accountAddress);
+    const tokens = await getAptosArenaOwnedTokens(provider.indexerClient as IndexerClient, accountAddress);
     res.status(200).send({
         tokens
     });
