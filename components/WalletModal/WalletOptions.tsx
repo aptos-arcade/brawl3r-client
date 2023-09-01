@@ -11,6 +11,8 @@ const WalletOptions = () => {
         <SimpleGrid
             columns={{ base: 1, sm: 2 }}
             spacing={4}
+            alignItems={'center'}
+            justifyContent={'center'}
         >
             {
                 wallets.map((wallet) => (

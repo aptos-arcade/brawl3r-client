@@ -1,18 +1,21 @@
 import React, {useEffect, useState} from "react";
 
-import { ChakraProvider } from "@chakra-ui/react";
+import {ChakraProvider} from "@chakra-ui/react";
 
 import "@fontsource/press-start-2p";
 
-import { AptosWalletAdapterProvider, Wallet } from "@aptos-labs/wallet-adapter-react";
-import { PontemWallet } from "@pontem/wallet-adapter-plugin";
-import { RiseWallet } from "@rise-wallet/wallet-adapter";
-import { PetraWallet } from "petra-plugin-wallet-adapter";
-import { MartianWallet } from "@martianwallet/aptos-wallet-adapter";
+import {AptosWalletAdapterProvider, NetworkName, Wallet} from "@aptos-labs/wallet-adapter-react";
 
-import type { AppProps } from 'next/app'
+import {PontemWallet} from "@pontem/wallet-adapter-plugin";
+import {RiseWallet} from "@rise-wallet/wallet-adapter";
+import {PetraWallet} from "petra-plugin-wallet-adapter";
+import {MartianWallet} from "@martianwallet/aptos-wallet-adapter";
+import {IdentityConnectWallet} from '@identity-connect/wallet-adapter-plugin';
+import {MSafeWalletAdapter} from "msafe-plugin-wallet-adapter";
+
+import type {AppProps} from 'next/app'
 import Head from "next/head";
-import { Analytics } from '@vercel/analytics/react';
+import {Analytics} from '@vercel/analytics/react';
 
 import {AptosProvider} from "@/contexts/AptosContext";
 
@@ -25,10 +28,15 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     setWallets([
+      new IdentityConnectWallet(
+          process.env.NEXT_PUBLIC_IDENTITY_CONNECT_ID as string,
+          { networkName: NetworkName.Mainnet}
+      ),
       new PontemWallet(),
       new RiseWallet(),
       new PetraWallet(),
       new MartianWallet(),
+      new MSafeWalletAdapter('https://app.m-safe.io')
     ])
     setLoaded(true);
   }, [])
