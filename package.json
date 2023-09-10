@@ -31,7 +31,6 @@
     "eslint-config-next": "13.4.8",
     "framer-motion": "^10.12.18",
     "guid-ts": "^1.1.2",
-    "msafe-plugin-wallet-adapter": "^0.1.0",
     "next": "13.2.4",
     "petra-plugin-wallet-adapter": "^0.1.5",
     "react": "18.2.0",

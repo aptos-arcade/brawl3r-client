@@ -11,7 +11,6 @@ import {RiseWallet} from "@rise-wallet/wallet-adapter";
 import {PetraWallet} from "petra-plugin-wallet-adapter";
 import {MartianWallet} from "@martianwallet/aptos-wallet-adapter";
 import {IdentityConnectWallet} from '@identity-connect/wallet-adapter-plugin';
-import {MSafeWalletAdapter} from "msafe-plugin-wallet-adapter";
 
 import type {AppProps} from 'next/app'
 import Head from "next/head";
@@ -36,7 +35,6 @@ export default function App({ Component, pageProps }: AppProps) {
       new RiseWallet(),
       new PetraWallet(),
       new MartianWallet(),
-      new MSafeWalletAdapter('https://app.m-safe.io')
     ])
     setLoaded(true);
   }, [])
