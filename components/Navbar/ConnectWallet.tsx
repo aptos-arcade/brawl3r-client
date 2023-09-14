@@ -23,7 +23,7 @@ import {ellipsize} from "@/services/utils";
 
 const ConnectWallet: React.FC = () => {
 
-    const { connected, account, disconnect } = useWallet();
+    const { connected, account, isLoading, disconnect } = useWallet();
 
     const { onCopy, setValue } = useClipboard("")
 
@@ -49,11 +49,14 @@ const ConnectWallet: React.FC = () => {
 
     const mobileView = useBreakpointValue({ base: true, sm: false });
 
-    if(!account?.address?.toString()) {
+    console.log(account)
+
+    if(!connected) {
         return (
             <Button
                 buttonType='primary'
                 onClick={onOpen}
+                isLoading={isLoading}
             >
                 Connect Wallet
             </Button>
@@ -81,7 +84,7 @@ const ConnectWallet: React.FC = () => {
                 px={{ base: 2, md: 4 }}
             >
                 {
-                    account && (account.ansName ? `${account.ansName}.apt` : ellipsize(account.address.toString()))
+                    account && (account.ansName ? `${account.ansName}.apt` : account.address?.toString() && ellipsize(account.address.toString()))
                 }
             </MenuButton>
             <MenuList
