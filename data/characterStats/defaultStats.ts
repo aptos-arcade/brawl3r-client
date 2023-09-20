@@ -2,7 +2,7 @@ import {CharacterStats} from "@/types/GameplayStats/CharacterStats";
 
 const defaultStats: CharacterStats = {
     // movement
-    acceleration: 60,
+    acceleration: 80,
     deceleration: 40,
     gravityScale: 4,
     speed: 8,
