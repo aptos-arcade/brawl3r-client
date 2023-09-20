@@ -20,7 +20,7 @@ const defaultStats: CharacterStats = {
             knockback: 20,
             damage: 0.3,
             stunTime: 0.25,
-            knockbackDirection: {x: 1, y: 2},
+            knockbackDirection: {x: 1, y: 3},
         }
     },
     jabMeleeAttack: {
