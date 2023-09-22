@@ -11,16 +11,13 @@ import {
     ModalOverlay,
 } from '@chakra-ui/react'
 
-import Control from './Control'
-
-import { Controls } from '@/types/Controls'
+import Controls from './Controls'
 
 interface Props {
     isOpen: boolean
-    onClose: () => void,
-    controls: Controls[]
+    onClose: () => void
 }
-const Controls: React.FC<Props> = ({ isOpen, onClose, controls }) => {
+const ControlsModal: React.FC<Props> = ({ isOpen, onClose }) => {
   return (
       <Modal
           isOpen={isOpen}
@@ -50,15 +47,7 @@ const Controls: React.FC<Props> = ({ isOpen, onClose, controls }) => {
                       gap={4}
                       flexWrap='wrap'
                   >
-                      {
-                          controls.map((control, index) => (
-                              <Control
-                                  key={index}
-                                  control={control}
-                                    divider={index !== controls.length - 1}
-                              />
-                          ))
-                      }
+                      <Controls />
                   </Flex>
               </ModalBody>
               <ModalFooter />
@@ -67,4 +56,4 @@ const Controls: React.FC<Props> = ({ isOpen, onClose, controls }) => {
   )
 }
 
-export default Controls
+export default ControlsModal

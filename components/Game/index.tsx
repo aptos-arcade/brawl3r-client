@@ -5,12 +5,12 @@ import {Card, Text, useDisclosure, VStack} from '@chakra-ui/react';
 import { Unity } from 'react-unity-webgl';
 
 import GetStarted from "@/components/Game/GetStarted";
-import ControlsModal from "@/components/ControlsModal";
+import ControlsModal from "@/components/Controls/ControlsModal";
 import CircularProgress from "@/components/Utilities/CircularProgress";
+import Button from "@/components/Utilities/Button";
 
 import useGame from "@/hooks/useGame";
 
-import controls from "@/data/controls";
 
 const Game: React.FC = () => {
 
@@ -23,7 +23,6 @@ const Game: React.FC = () => {
             <ControlsModal
                 isOpen={isOpen}
                 onClose={onClose}
-                controls={controls}
             />
             <VStack
                 spacing={8}
@@ -44,19 +43,25 @@ const Game: React.FC = () => {
                     {
                         !isLoaded && (
                             <VStack
-                                position='absolute'
-                                left='50%'
-                                top='50%'
-                                transform='translate(-50%, -50%)'
+                                w={'100%'}
+                                h={'100%'}
+                                justifyContent={'center'}
+                                alignItems={'center'}
+                                position={'absolute'}
+                                p={4}
+                                spacing={4}
                             >
-                                <CircularProgress
-                                    size='80px'
-                                />
-                                <Text
-                                    textAlign={'center'}
-                                >
-                                    Loading can take a few seconds...
+
+                                <CircularProgress />
+                                <Text>
+                                    Loading Game...
                                 </Text>
+                                <Button
+                                    buttonType={'primary'}
+                                    onClick={onOpen}
+                                >
+                                    View Controls
+                                </Button>
                             </VStack>
                         )
                     }

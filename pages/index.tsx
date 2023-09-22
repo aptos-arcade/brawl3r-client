@@ -30,7 +30,6 @@ const HomePage: NextPage = () => {
               <Divider />
               <Game />
               <Divider />
-              {/*<BrawlerMenu />*/}
               <WalletModal />
           </Layout>
       </>
