@@ -17,7 +17,7 @@ const defaultStats: CharacterStats = {
     sideMeleeAttack: {
         energy: 0.4,
         attackData: {
-            knockback: 10,
+            knockback: 7.5,
             damage: 0.3,
             stunTime: 0.25,
             knockbackDirection: {x: 1, y: 3},
@@ -35,7 +35,7 @@ const defaultStats: CharacterStats = {
     upMeleeAttack: {
         energy: 0.2,
         attackData: {
-            knockback: 10,
+            knockback: 7.5,
             damage: 0.2,
             stunTime: 0.125,
             knockbackDirection: {x: 1, y: 4},
